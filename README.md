@@ -1,4 +1,4 @@
-# NoiseWorldGen2D - Customized Godot Tilemap ![Godot v3.2](https://img.shields.io/badge/Godot-v3.2-%23478cbf?logo=godot-engine&logoColor=white) ![Godot v3.3](https://img.shields.io/badge/Godot-v3.3-%23478cbf?logo=godot-engine&logoColor=white)
+# NoiseWorldGen2D - Godot Tilemap Tool ![Godot v3.2](https://img.shields.io/badge/Godot-v3.2-%23478cbf?logo=godot-engine&logoColor=white) ![Godot v3.3](https://img.shields.io/badge/Godot-v3.3-%23478cbf?logo=godot-engine&logoColor=white)
 ![Banner Worldgen](.//worldgenbanner.png)
 
 ## Made for:
