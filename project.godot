@@ -17,7 +17,7 @@ _global_script_class_icons={
 config/name="NoiseWorldGen2D"
 config/description="Tilemap tool script built to make simple noise-based worlds."
 run/main_scene="res://addons/NoiseWorldGen2D/src/NoiseWorldGen2D.tscn"
-config/icon="res://icon128.png"
+config/icon="res://Icon256.png"
 
 [display]
 
