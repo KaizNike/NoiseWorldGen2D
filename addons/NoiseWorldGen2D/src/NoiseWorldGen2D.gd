@@ -1,10 +1,12 @@
 tool
 extends TileMap
 
-var version = "1.0"
+var version = "2.0"
 
+# setting size greater than 1200 has long processing times
 export(int, 7, 1200) var world_size = 50 setget size_change
 export var world_type = "overworld" setget type_change
+export(Image) var height_image setget height_image_change
 export(int) var height_seed = 0 setget height_seed_change
 export(int) var forest_seed = 0 setget forest_seed_change
 export(int) var land_seed = 0 setget land_seed_change
@@ -13,6 +15,7 @@ export(float) var Heat_Change = 0 setget changing_heat
 export(float) var Height_Change = 0 setget changing_height
 export(bool) var is_rounded = true setget is_rounded_change
 export(bool) var lock_world = false
+#export(bool) var test = false setget testing
 
 var heat_variation = 0.045
 var height_variation = 0.015
@@ -67,6 +70,14 @@ func _ready():
 		startup()
 		
 
+func testing(test):
+	print("ready.")
+	if height_image:
+		print("set.")
+		print(height_image.get_pixel(1,1).r * 2 - 1)
+	else:
+		print("no image.")
+
 func size_change(new_size):
 	world_size = new_size
 	pre_startup_init()
@@ -76,6 +87,10 @@ func type_change(new_type):
 	world_type = new_type
 	pre_startup_init()
 
+
+func height_image_change(new_image):
+	height_image = new_image
+	pre_startup_init()
 
 func height_seed_change(new_seed):
 	height_seed = new_seed
@@ -160,6 +175,8 @@ func _variation_noise_init():
 
 
 func genWorld(size, type, temp, height):
+	var Height = size
+	var Width = size
 	if lock_world:
 		return
 	else:
@@ -171,6 +188,20 @@ func genWorld(size, type, temp, height):
 	heightChange = height / 100
 #	print(heatChange)
 #	check type of world, if you have different tilesets for different worlds, include other consts for reference
+	if height_image:
+		height_image.lock()
+		Height = height_image.get_size().y
+		if Height > 1200:
+			print("Image too large.")
+			return
+		Width = height_image.get_size().x
+		if Width > 1200:
+			print("Image too large.")
+			return
+		if Height > Width:
+			size = Width
+		else:
+			size = Height
 	if type == "overworld":
 		print("Generate overworld now!")
 #		if heatSelect == "polar":
@@ -182,22 +213,26 @@ func genWorld(size, type, temp, height):
 #			print(heatImage.get_size())
 #			heatImage.lock()
 #			print(heatImage.get_pixel(200, 0))
-		for y in range(size):
+		for y in range(Height):
 			if heatSelect == "polar":
 #				heat += 1
-				if y < (size / 2):
-					heat += 1.0 / float(size) * 2.0
-				elif y > (size / 2):
-					heat -= 1.0 / float(size) * 2.0
+				if y < (Height / 2):
+					heat += 1.0 / float(Height) * 2.0
+				elif y > (Height / 2):
+					heat -= 1.0 / float(Height) * 2.0
 				if y % 10 == 0:
 #					print(float(heat))
 					pass
-			for x in range(size):
+			for x in range(Width):
 				var heat_cell = heat + heatChange + (0.05* variation_noise.get_noise_2d(float(x), float(y))) # + rand_range(-heat_variation, heat_variation) 
 				if not on_circle(x, y, size):
 					continue
 				tiles_count += 1
-				var cell = noise_height.get_noise_2d(float(x), float(y)) + heightChange + (0.05 * variation_noise.get_noise_2d(float(x), float(y))) #  + rand_range(-height_variation, height_variation)
+				var cell := 0.0
+				if not height_image:
+					cell = noise_height.get_noise_2d(float(x), float(y)) + heightChange + (0.05 * variation_noise.get_noise_2d(float(x), float(y))) #  + rand_range(-height_variation, height_variation)
+				else:
+					cell = (height_image.get_pixel(x, y).r * 2 - 1) + heightChange
 				if cell + waterLoss < -0.1:
 					if heat_cell < 0.15:
 						set_cell(x,y,0,false,false,false,TILES.ice)
