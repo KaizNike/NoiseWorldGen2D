@@ -8,6 +8,12 @@
 ### [Grayscale Eevee](https://twitter.com/koriArredondo/status/1449412238385762309)
 [@koriArredondo](https://twitter.com/koriArredondo)
 
+### Westeros Heightmap
+[Tophloaf](https://forums.nexusmods.com/index.php?/topic/464977-the-westeros-project/page-7)
+
+### Shefalitayal
+Kudos to whoever made it!
+
 ## Installation:
 Copy the addons folder to your project and instance the NoiseWorldGen2D Node. Made for 2D. Change the exported variables to customize.
 
