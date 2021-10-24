@@ -1,8 +1,12 @@
 # NoiseWorldGen2D - Godot Tilemap Tool ![Godot v3.2](https://img.shields.io/badge/Godot-v3.2-%23478cbf?logo=godot-engine&logoColor=white) ![Godot v3.3](https://img.shields.io/badge/Godot-v3.3-%23478cbf?logo=godot-engine&logoColor=white)
-![Banner Worldgen](.//worldgenbanner.png)
+![Banner Worldgen W/ an Eevee](.//worldgenbanner2.png)
 
 ## Made for:
 #### [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x)
+
+## Credits:
+### [Grayscale Eevee](https://twitter.com/koriArredondo/status/1449412238385762309)
+[@koriArredondo](https://twitter.com/koriArredondo)
 
 ## Installation:
 Copy the addons folder to your project and instance the NoiseWorldGen2D Node. Made for 2D. Change the exported variables to customize.

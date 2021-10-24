@@ -1,7 +1,8 @@
 tool
 extends TileMap
 
-var version = "2.0"
+var version = "2.1"
+# Eevee meme
 
 # setting size greater than 1200 has long processing times
 export(int, 7, 1200) var world_size = 50 setget size_change
@@ -15,6 +16,7 @@ export(float) var Heat_Change = 0 setget changing_heat
 export(float) var Height_Change = 0 setget changing_height
 export(bool) var is_rounded = true setget is_rounded_change
 export(bool) var lock_world = false
+export(bool) var regen_button = false setget regen_button_pressed
 #export(bool) var test = false setget testing
 
 var heat_variation = 0.045
@@ -124,6 +126,10 @@ func changing_height(new_height):
 
 func is_rounded_change(new_bool):
 	is_rounded = new_bool
+	pre_startup_init()
+
+
+func regen_button_pressed(new_bool):
 	pre_startup_init()
 
 func pre_startup_init():
