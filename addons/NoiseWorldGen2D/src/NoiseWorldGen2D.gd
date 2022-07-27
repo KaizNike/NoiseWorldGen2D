@@ -150,10 +150,10 @@ func startup():
 
 func _noise_height_init():
 	noise_height.seed = height_seed
-	noise_height.octaves = 5
+	noise_height.octaves = 9
 	noise_height.period = 80.0
-	noise_height.persistence = 0.3
-	noise_height.lacunarity = 0.2
+	noise_height.persistence = 0.5
+	noise_height.lacunarity = 2
 
 
 func _forest_noise_init():
