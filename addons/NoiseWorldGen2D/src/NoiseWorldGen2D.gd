@@ -6,6 +6,7 @@ var version = "2.1"
 
 # setting size greater than 1200 has long processing times
 export(int, 7, 1200) var world_size = 50 setget size_change
+export(int) var time = 0
 export var world_type = "overworld" setget type_change
 export(Image) var height_image setget height_image_change
 export(int) var height_seed = 0 setget height_seed_change
@@ -18,6 +19,10 @@ export(bool) var is_rounded = true setget is_rounded_change
 export(bool) var lock_world = false
 export(bool) var regen_button = false setget regen_button_pressed
 #export(bool) var test = false setget testing
+
+var continents = []
+var drift_dirs = []
+var drift = Vector2.ZERO
 
 var heat_variation = 0.045
 var height_variation = 0.015
@@ -67,6 +72,7 @@ onready var tiles = self.tile_set
 onready var rect = tiles.tile_get_region(0)
 
 func _ready():
+	randomize()
 #	print(get_used_cells())
 	if !get_used_cells() and Engine.editor_hint:
 		startup()
@@ -208,6 +214,7 @@ func genWorld(size, type, temp, height):
 			size = Width
 		else:
 			size = Height
+	find_continents(Width,Height,height)
 	if type == "overworld":
 		print("Generate overworld now!")
 #		if heatSelect == "polar":
@@ -328,9 +335,42 @@ func genWorld(size, type, temp, height):
 	# Define your own hellish landscape, bypasses typical generation
 	elif type == "hellplanet":
 		pass
-		
+	
 	heat = 0
+	
 		
+func find_continents(X,Y,Height):
+	var a = setup_continents(X,Y)
+	for y in range(Y):
+		var temp = []
+		for x in range(X):
+			var cell
+			if not height_image:
+				cell = noise_height.get_noise_2d(float(x), float(y)) + heightChange + (0.05 * variation_noise.get_noise_2d(float(x), float(y))) #  + rand_range(-height_variation, height_variation)
+			else:
+				cell = (height_image.get_pixel(x, y).r * 2 - 1) + heightChange
+			if a[y][x] == 0 and cell > -0.1:
+				paint(a)
+			pass
+	pass
+		
+
+func setup_continents(X,Y) -> Array:
+	var a = []
+	for y in range(Y):
+		var temp = []
+		for x in range(X):
+			temp.append(0)
+		a.append(temp)
+	return a
+
+func paint(array):
+	
+	
+	
+	
+	pass
+
 func on_circle(xpos, ypos, Size):
 	if not is_rounded:
 		return true
