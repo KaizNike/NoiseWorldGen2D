@@ -5,7 +5,7 @@ var version = "2.1"
 # Eevee meme
 
 # setting size greater than 1200 has long processing times
-export(int, 7, 1200) var world_size = 50 setget size_change
+export(Vector2) var world_size = Vector2(50,50) setget size_change
 export(int) var time = 0
 export var world_type = "overworld" setget type_change
 export(Image) var height_image setget height_image_change
@@ -16,6 +16,7 @@ export(int) var variation_seed = 0 setget variation_seed_change
 export(float) var Heat_Change = 0 setget changing_heat
 export(float) var Height_Change = 0 setget changing_height
 export(bool) var is_rounded = true setget is_rounded_change
+export(bool) var is_ovalled = false setget is_ovalled_change
 export(bool) var lock_world = false
 export(bool) var regen_button = false setget regen_button_pressed
 #export(bool) var test = false setget testing
@@ -131,9 +132,19 @@ func changing_height(new_height):
 
 
 func is_rounded_change(new_bool):
+	if is_ovalled:
+		is_ovalled = false
+		property_list_changed_notify()
 	is_rounded = new_bool
 	pre_startup_init()
 
+
+func is_ovalled_change(new_bool):
+	if is_rounded:
+		is_rounded = false
+		property_list_changed_notify()
+	is_ovalled = new_bool
+	pre_startup_init()
 
 func regen_button_pressed(new_bool):
 	pre_startup_init()
@@ -186,9 +197,9 @@ func _variation_noise_init():
 	variation_noise.lacunarity = 2
 
 
-func genWorld(size, type, temp, height):
-	var Height = size
-	var Width = size
+func genWorld(size:Vector2, type, temp, height):
+	var Height = size.y
+	var Width = size.x
 	if lock_world:
 		return
 	else:
@@ -199,7 +210,6 @@ func genWorld(size, type, temp, height):
 		waterLoss = 0
 	heightChange = height / 100
 #	print(heatChange)
-#	check type of world, if you have different tilesets for different worlds, include other consts for reference
 	if height_image:
 		height_image.lock()
 		Height = height_image.get_size().y
@@ -214,7 +224,8 @@ func genWorld(size, type, temp, height):
 			size = Width
 		else:
 			size = Height
-	find_continents(Width,Height,height)
+#	find_continents(Width,Height,height)
+#	check type of world, if you have different tilesets for different worlds, include other consts for reference
 	if type == "overworld":
 		print("Generate overworld now!")
 #		if heatSelect == "polar":
@@ -238,7 +249,9 @@ func genWorld(size, type, temp, height):
 					pass
 			for x in range(Width):
 				var heat_cell = heat + heatChange + (0.05* variation_noise.get_noise_2d(float(x), float(y))) # + rand_range(-heat_variation, heat_variation) 
-				if not on_circle(x, y, size):
+				if is_rounded and not on_circle(x, y, size):
+					continue
+				if is_ovalled and not is_point_in_rotated_oval(Vector2(x,y),Vector2(Width/2,Height/2),Vector2(Width/2,Height/2),40.0):
 					continue
 				tiles_count += 1
 				var cell := 0.0
@@ -371,10 +384,18 @@ func paint(array):
 	
 	pass
 
-func on_circle(xpos, ypos, Size):
-	if not is_rounded:
+func on_circle(xpos, ypos, Size:Vector2):
+	if not is_rounded or is_ovalled:
 		return true
-	if Size / 2 > sqrt(abs(xpos - Size / 2) * abs(xpos - Size / 2) + abs(ypos - Size / 2) * abs(ypos - Size / 2)):
+	if Size.x / 2 > sqrt(abs(xpos - Size.x / 2) * abs(xpos - Size.x / 2) + abs(ypos - Size.x / 2) * abs(ypos - Size.x / 2)):
 		return true
 	else:
 		return false
+
+# Copilot wrote this
+func is_point_in_rotated_oval(point: Vector2, center: Vector2, radius: Vector2, angle: float) -> bool:
+	if not is_ovalled or is_rounded:
+		return true
+	var rel = point - center
+	var rotated = rel.rotated(-angle)
+	return pow(rotated.x / radius.x, 2) + pow(rotated.y / radius.y, 2) <= 1.0
