@@ -2,12 +2,13 @@
 
 importer="image"
 type="Image"
-path="res://.import/eeveetest2.png-4a8b116ab387f321ef9eb8f563018032.image"
+uid="uid://hdl4m6smiw0t"
+path="res://.godot/imported/eeveetest2.png-4a8b116ab387f321ef9eb8f563018032.image"
 
 [deps]
 
 source_file="res://addons/NoiseWorldGen2D/assets/eeveetest2.png"
-dest_files=[ "res://.import/eeveetest2.png-4a8b116ab387f321ef9eb8f563018032.image" ]
+dest_files=["res://.godot/imported/eeveetest2.png-4a8b116ab387f321ef9eb8f563018032.image"]
 
 [params]
 

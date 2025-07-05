@@ -1,24 +1,24 @@
-tool
-extends TileMap
+@tool
+extends TileMapLayer
 
 var version = "2.1"
 # Eevee meme
 
 # setting size greater than 1200 has long processing times
-export(Vector2) var world_size = Vector2(50,50) setget size_change
-export(int) var time = 0
-export var world_type = "overworld" setget type_change
-export(Image) var height_image setget height_image_change
-export(int) var height_seed = 0 setget height_seed_change
-export(int) var forest_seed = 0 setget forest_seed_change
-export(int) var land_seed = 0 setget land_seed_change
-export(int) var variation_seed = 0 setget variation_seed_change
-export(float) var Heat_Change = 0 setget changing_heat
-export(float) var Height_Change = 0 setget changing_height
-export(bool) var is_rounded = true setget is_rounded_change
-export(bool) var is_ovalled = false setget is_ovalled_change
-export(bool) var lock_world = false
-export(bool) var regen_button = false setget regen_button_pressed
+@export var world_size: Vector2 = Vector2(50,50): set = size_change
+@export var time: int = 0
+@export var world_type = "overworld": set = type_change
+@export var height_image: Image: set = height_image_change
+@export var height_seed: int = 0: set = height_seed_change
+@export var forest_seed: int = 0: set = forest_seed_change
+@export var land_seed: int = 0: set = land_seed_change
+@export var variation_seed: int = 0: set = variation_seed_change
+@export var Heat_Change: float = 0: set = changing_heat
+@export var Height_Change: float = 0: set = changing_height
+@export var is_rounded: bool = true: set = is_rounded_change
+@export var is_ovalled: bool = false: set = is_ovalled_change
+@export var lock_world: bool = false
+@export var regen_button: bool = false: set = regen_button_pressed
 #export(bool) var test = false setget testing
 
 var continents = []
@@ -36,11 +36,11 @@ var heightChange = 0
 
 var rng = RandomNumberGenerator.new()
 
-onready var noise_height = OpenSimplexNoise.new()
-onready var forest_noise = OpenSimplexNoise.new()
-onready var land_noise = OpenSimplexNoise.new()
-onready var variation_noise = OpenSimplexNoise.new()
-onready var river_noise = OpenSimplexNoise.new()
+@onready var noise_height = FastNoiseLite.new()
+@onready var forest_noise = FastNoiseLite.new()
+@onready var land_noise = FastNoiseLite.new()
+@onready var variation_noise = FastNoiseLite.new()
+@onready var river_noise = FastNoiseLite.new()
 
 const TILES = {
 	"dirt" : Vector2(0,0),
@@ -69,13 +69,13 @@ const TILES = {
 	"deepjungle" : Vector2(3,5)
 }
 
-onready var tiles = self.tile_set
-onready var rect = tiles.tile_get_region(0)
+@onready var tiles = self.tile_set
+#@onready var rect = tiles.tile_get_region(0)
 
 func _ready():
 	randomize()
 #	print(get_used_cells())
-	if !get_used_cells() and Engine.editor_hint:
+	if !get_used_cells() and Engine.is_editor_hint():
 		startup()
 		
 
@@ -134,7 +134,7 @@ func changing_height(new_height):
 func is_rounded_change(new_bool):
 	if is_ovalled:
 		is_ovalled = false
-		property_list_changed_notify()
+		notify_property_list_changed()
 	is_rounded = new_bool
 	pre_startup_init()
 
@@ -142,7 +142,7 @@ func is_rounded_change(new_bool):
 func is_ovalled_change(new_bool):
 	if is_rounded:
 		is_rounded = false
-		property_list_changed_notify()
+		notify_property_list_changed()
 	is_ovalled = new_bool
 	pre_startup_init()
 
@@ -150,10 +150,10 @@ func regen_button_pressed(new_bool):
 	pre_startup_init()
 
 func pre_startup_init():
-	noise_height = OpenSimplexNoise.new()
-	forest_noise = OpenSimplexNoise.new()
-	land_noise = OpenSimplexNoise.new()
-	variation_noise = OpenSimplexNoise.new()
+	noise_height = FastNoiseLite.new()
+	forest_noise = FastNoiseLite.new()
+	land_noise = FastNoiseLite.new()
+	variation_noise = FastNoiseLite.new()
 	startup()
 
 
@@ -167,34 +167,34 @@ func startup():
 
 func _noise_height_init():
 	noise_height.seed = height_seed
-	noise_height.octaves = 9
-	noise_height.period = 80.0
-	noise_height.persistence = 0.5
-	noise_height.lacunarity = 2
+	noise_height.fractal_octaves = 9
+	#noise_height.period = 80.0
+	#noise_height.persistence = 0.5
+	#noise_height.lacunarity = 2
 
 
 func _forest_noise_init():
 	forest_noise.seed = forest_seed
-	forest_noise.octaves = 9
-	forest_noise.period = 19.0
-	forest_noise.persistence = 0.2
-	forest_noise.lacunarity = 2
+	forest_noise.fractal_octaves = 9
+	#forest_noise.period = 19.0
+	#forest_noise.persistence = 0.2
+	#forest_noise.lacunarity = 2
 
 
 func _land_noise_init():
 	land_noise.seed = land_seed
-	land_noise.octaves = 9
-	land_noise.period = 19.0
-	land_noise.persistence = 0.2
-	land_noise.lacunarity = 2
+	land_noise.fractal_octaves = 9
+	#land_noise.period = 19.0
+	#land_noise.persistence = 0.2
+	#land_noise.lacunarity = 2
 	
 	
 func _variation_noise_init():
 	variation_noise.seed = variation_seed
-	variation_noise.octaves = 9
-	variation_noise.period = 3
-	variation_noise.persistence = 0.2
-	variation_noise.lacunarity = 2
+	variation_noise.fractal_octaves = 9
+	#variation_noise.period = 3
+	#variation_noise.persistence = 0.2
+	#variation_noise.lacunarity = 2
 
 
 func genWorld(size:Vector2, type, temp, height):
@@ -211,7 +211,7 @@ func genWorld(size:Vector2, type, temp, height):
 	heightChange = height / 100
 #	print(heatChange)
 	if height_image:
-		height_image.lock()
+		false # height_image.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 		Height = height_image.get_size().y
 		if Height > 1200:
 			print("Image too large.")
@@ -248,7 +248,7 @@ func genWorld(size:Vector2, type, temp, height):
 #					print(float(heat))
 					pass
 			for x in range(Width):
-				var heat_cell = heat + heatChange + (0.05* variation_noise.get_noise_2d(float(x), float(y))) # + rand_range(-heat_variation, heat_variation) 
+				var heat_cell = heat + heatChange + (0.05* variation_noise.get_noise_2d(float(x), float(y))) # + randf_range(-heat_variation, heat_variation) 
 				if is_rounded and not on_circle(x, y, size):
 					continue
 				if is_ovalled and not is_point_in_rotated_oval(Vector2(x,y),Vector2(Width/2,Height/2),Vector2(Width/2,Height/2),40.0):
@@ -256,94 +256,94 @@ func genWorld(size:Vector2, type, temp, height):
 				tiles_count += 1
 				var cell := 0.0
 				if not height_image:
-					cell = noise_height.get_noise_2d(float(x), float(y)) + heightChange + (0.05 * variation_noise.get_noise_2d(float(x), float(y))) #  + rand_range(-height_variation, height_variation)
+					cell = noise_height.get_noise_2d(float(x), float(y)) + heightChange + (0.05 * variation_noise.get_noise_2d(float(x), float(y))) #  + randf_range(-height_variation, height_variation)
 				else:
 					cell = (height_image.get_pixel(x, y).r * 2 - 1) + heightChange
 				if cell + waterLoss < -0.1:
 					if heat_cell < 0.15:
-						set_cell(x,y,0,false,false,false,TILES.ice)
+						set_cell(Vector2i(x,y),0,TILES.ice)
 #						array[y][x] = TILES.ice
 					else:
 						if cell + waterLoss < -0.55:
-							set_cell(x,y,0,false,false,false,TILES.abyssalwater)
+							set_cell(Vector2i(x,y),0,TILES.abyssalwater)
 #							array[y][x] = TILES.abyssalwater
 						elif cell + waterLoss < -0.4:
-							set_cell(x,y,0,false,false,false,TILES.deepwater)
+							set_cell(Vector2i(x,y),0,TILES.deepwater)
 #							array[y][x] = TILES.deepwater
 						elif cell + waterLoss < -0.25:
-							set_cell(x,y,0,false,false,false,TILES.medwater)
+							set_cell(Vector2i(x,y),0,TILES.medwater)
 #							array[y][x] = TILES.medwater
 						else:
-							set_cell(x,y,0,false,false,false,TILES.shallowwater)
+							set_cell(Vector2i(x,y),0,TILES.shallowwater)
 #							array[y][x] = TILES.shallowwater
 				elif cell > 0.5:
-					set_cell(x,y,0,false,false,false,TILES.mountain)
+					set_cell(Vector2i(x,y),0,TILES.mountain)
 #					array[y][x] = TILES.mountain
 				elif cell > 0.4:
 					if heat_cell < 0.3 or heat_cell > 0.85:
-						set_cell(x,y,0,false,false,false,TILES.dryhills)
+						set_cell(Vector2i(x,y),0,TILES.dryhills)
 #						array[y][x] = TILES.dryhills
 					else:
-						set_cell(x,y,0,false,false,false,TILES.hill)
+						set_cell(Vector2i(x,y),0,TILES.hill)
 #						array[y][x] = TILES.hill
 				else:
 					var cell_forest = forest_noise.get_noise_2d(float(x), float(y))
 					if cell_forest > 0.3 and heat_cell > 0.15:
 						if heat_cell > 0.15 and heat_cell < 0.3:
 							if cell_forest > 0.5:
-								set_cell(x,y,0,false,false,false,TILES.tundradeepforest)
+								set_cell(Vector2i(x,y),0,TILES.tundradeepforest)
 #								array[y][x] = TILES.tundradeepforest
 							elif cell_forest > 0.3:
-								set_cell(x,y,0,false,false,false,TILES.tundraforest)
+								set_cell(Vector2i(x,y),0,TILES.tundraforest)
 #								array[y][x] = TILES.tundraforest
 						elif heat_cell > 0.6 and heat_cell < 0.85:
 							if cell_forest > 0.5:
-								set_cell(x,y,0,false,false,false,TILES.deepjungle)
+								set_cell(Vector2i(x,y),0,TILES.deepjungle)
 #								array[y][x] = TILES.deepjungle
 							elif cell_forest > 0.4:
-								set_cell(x,y,0,false,false,false,TILES.jungle)
+								set_cell(Vector2i(x,y),0,TILES.jungle)
 #								array[y][x] = TILES.jungle
 							elif cell_forest > 0.3:
-								set_cell(x,y,0,false,false,false,TILES.lushbrushland)
+								set_cell(Vector2i(x,y),0,TILES.lushbrushland)
 #								array[y][x] = TILES.lushbrushland
 						elif heat_cell > 0.85:
-							set_cell(x,y,0,false,false,false,TILES.desertforest)
+							set_cell(Vector2i(x,y),0,TILES.desertforest)
 #							if cell_forest > 0.3:
 #							array[y][x] = TILES.desertforest
 						else:
 							if cell_forest > 0.5:
-								set_cell(x,y,0,false,false,false,TILES.deepforest)
+								set_cell(Vector2i(x,y),0,TILES.deepforest)
 #								array[y][x] = TILES.deepforest
 							elif cell_forest > 0.4:
-								set_cell(x,y,0,false,false,false,TILES.forest)
+								set_cell(Vector2i(x,y),0,TILES.forest)
 #								array[y][x] = TILES.forest
 							elif cell_forest > 0.3:
-								set_cell(x,y,0,false,false,false,TILES.brushland)
+								set_cell(Vector2i(x,y),0,TILES.brushland)
 #								array[y][x] = TILES.brushland
 					else:
 						var cell_land = land_noise.get_noise_2d(float(x), float(y))
 						if heat_cell < 0.15:
-							set_cell(x,y,0,false,false,false,TILES.snow)
+							set_cell(Vector2i(x,y),0,TILES.snow)
 #							array[y][x] = TILES.snow
 						elif heat_cell > 0.85:
-							set_cell(x,y,0,false,false,false,TILES.desert)
+							set_cell(Vector2i(x,y),0,TILES.desert)
 #							array[y][x] = TILES.desert
 						else:
 							if cell_land < -0.25:
-								set_cell(x,y,0,false,false,false,TILES.swamp)
+								set_cell(Vector2i(x,y),0,TILES.swamp)
 #								array[y][x] = TILES.swamp
 							elif cell_land < -0.1:
-								set_cell(x,y,0,false,false,false,TILES.dirt)
+								set_cell(Vector2i(x,y),0,TILES.dirt)
 #								array[y][x] = TILES.dirt
 							else:
 								if heat_cell > 0.6 and heat_cell < 0.85:
-									set_cell(x,y,0,false,false,false,TILES.lushgrass)
+									set_cell(Vector2i(x,y),0,TILES.lushgrass)
 #									array[y][x] = TILES.lushgrass
 								elif heat_cell > 0.15 and heat_cell < 0.3:
-									set_cell(x,y,0,false,false,false,TILES.tundra)
+									set_cell(Vector2i(x,y),0,TILES.tundra)
 #									array[y][x] = TILES.tundra
 								else:
-									set_cell(x,y,0,false,false,false,TILES.grass)
+									set_cell(Vector2i(x,y),0,TILES.grass)
 #									array[y][x] = TILES.grass
 	# Define your own hellish landscape, bypasses typical generation
 	elif type == "hellplanet":
@@ -359,7 +359,7 @@ func find_continents(X,Y,Height):
 		for x in range(X):
 			var cell
 			if not height_image:
-				cell = noise_height.get_noise_2d(float(x), float(y)) + heightChange + (0.05 * variation_noise.get_noise_2d(float(x), float(y))) #  + rand_range(-height_variation, height_variation)
+				cell = noise_height.get_noise_2d(float(x), float(y)) + heightChange + (0.05 * variation_noise.get_noise_2d(float(x), float(y))) #  + randf_range(-height_variation, height_variation)
 			else:
 				cell = (height_image.get_pixel(x, y).r * 2 - 1) + heightChange
 			if a[y][x] == 0 and cell > -0.1:

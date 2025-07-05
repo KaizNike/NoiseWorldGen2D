@@ -6,20 +6,20 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[  ]
-_global_script_class_icons={
-
-}
+config_version=5
 
 [application]
 
 config/name="NoiseWorldGen2D"
 config/description="Tilemap tool script built to make simple noise-based worlds."
 run/main_scene="res://addons/NoiseWorldGen2D/src/NoiseWorldGen2D.tscn"
+config/features=PackedStringArray("4.4")
 config/icon="res://Icon256.png"
 
 [display]
 
-window/size/width=600
+window/size/viewport_width=600
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
