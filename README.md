@@ -1,5 +1,5 @@
 # NoiseWorldGen2D - Godot Tilemap Tool (Godot Version 4.5)
-![Banner Worldgen W/ an Eevee](.//worldgenbanner2.png)
+![Banner Worldgen](.//worldgenbanner3.png)
 
 ## Made for:
 #### [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x)
