@@ -13,7 +13,7 @@ config_version=5
 config/name="NoiseWorldGen2D"
 config/description="Tilemap tool script built to make simple noise-based worlds."
 run/main_scene="res://addons/NoiseWorldGen2D/src/NoiseWorldGen2D.tscn"
-config/features=PackedStringArray("4.4")
+config/features=PackedStringArray("4.5")
 config/icon="res://Icon256.png"
 
 [display]

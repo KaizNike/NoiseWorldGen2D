@@ -1,35 +1,36 @@
 @tool
 extends TileMapLayer
 
-var version = "2.1"
-# Eevee meme
+var version = "3.0"
 
-# setting size greater than 1200 has long processing times
-@export var world_size: Vector2 = Vector2(50,50): set = size_change
-@export var time: int = 0
-@export var world_type = "overworld": set = type_change
-@export var height_image: Image: set = height_image_change
-@export var height_seed: int = 0: set = height_seed_change
-@export var forest_seed: int = 0: set = forest_seed_change
-@export var land_seed: int = 0: set = land_seed_change
-@export var variation_seed: int = 0: set = variation_seed_change
-@export var Heat_Change: float = 0: set = changing_heat
-@export var Height_Change: float = 0: set = changing_height
-@export var is_rounded: bool = true: set = is_rounded_change
-@export var is_ovalled: bool = false: set = is_ovalled_change
-@export var lock_world: bool = false
-@export var regen_button: bool = false: set = regen_button_pressed
+
+@export var world_size: Vector2 = Vector2(50,50): set = size_change ## X, Y dimensions of world ( setting size greater than 1200 has long processing times )
+@export var time: int = 0 ## Unimplemented, but will change world over time
+@export var world_type = "overworld": set = type_change ## The type and tileset used to generate, overworld is earthlike
+@export var heatSelect = "polar": set = heat_change ## Heat spectrum to use, polar the default does like earth with no consideration of rotated poles
+@export var height_image: Image: set = height_image_change ## grayscale height image to override height generation
+@export var world_seed: int = 0: set = world_seed_change ## gives a specific world, randomizes each seed the same way
+@export var height_seed: int = 0: set = height_seed_change ## the seed for the landform generation
+@export var forest_seed: int = 0: set = forest_seed_change ## seed determines forest growth
+@export var land_seed: int = 0: set = land_seed_change ## determines land wetness by seed
+@export var variation_seed: int = 0: set = variation_seed_change ## gives variance to everything
+@export var Heat_Change: float = 0: set = changing_heat ## alters world heat
+@export var Height_Change: float = 0: set = changing_height ## offsets world height
+@export var is_rounded: bool = true: set = is_rounded_change ## if true (default), the world is rounded, otherwise square. exclusive with is ovalled
+@export var is_ovalled: bool = false: set = is_ovalled_change ## can be handy for making something like other earth projections, if size x, y is same will be similar to is rounded but off by a tile or two, exclusive with is rounded
+@export var lock_world: bool = false ## prevents variable changes in editor from making updates live
+@export var regen_button: bool = false: set = regen_button_pressed ## force regeneration
 #export(bool) var test = false setget testing
 
 var continents = []
 var drift_dirs = []
 var drift = Vector2.ZERO
 
-var heat_variation = 0.045
+var heat_variation = 0.45
 var height_variation = 0.015
 var tiles_count  = 0
 
-var heatSelect = "polar"
+
 var heat = 0
 var heatChange = 0
 var heightChange = 0
@@ -97,8 +98,23 @@ func type_change(new_type):
 	pre_startup_init()
 
 
+func heat_change(new_value):
+	heatSelect = new_value
+	pre_startup_init()
+
 func height_image_change(new_image):
 	height_image = new_image
+	pre_startup_init()
+	
+	
+func world_seed_change(new_seed):
+	world_seed = new_seed
+	var rand := RandomNumberGenerator.new()
+	rand.seed = new_seed
+	height_seed = rand.randi()
+	forest_seed = rand.randi()
+	land_seed = rand.randi()
+	variation_seed = rand.randi()
 	pre_startup_init()
 
 func height_seed_change(new_seed):
@@ -245,10 +261,10 @@ func genWorld(size:Vector2, type, temp, height):
 				elif y > (Height / 2):
 					heat -= 1.0 / float(Height) * 2.0
 				if y % 10 == 0:
-#					print(float(heat))
+					print(float(heat))
 					pass
 			for x in range(Width):
-				var heat_cell = heat + heatChange + (0.05* variation_noise.get_noise_2d(float(x), float(y))) # + randf_range(-heat_variation, heat_variation) 
+				var heat_cell = heat + heatChange + (0.35* variation_noise.get_noise_2d(float(x), float(y))) # + randf_range(-heat_variation, heat_variation) 
 				if is_rounded and not on_circle(x, y, size):
 					continue
 				if is_ovalled and not is_point_in_rotated_oval(Vector2(x,y),Vector2(Width/2,Height/2),Vector2(Width/2,Height/2),40.0):
