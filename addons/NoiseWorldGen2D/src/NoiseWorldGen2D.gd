@@ -227,7 +227,7 @@ func genWorld(size:Vector2, type, temp, height):
 	heightChange = height / 100
 #	print(heatChange)
 	if height_image:
-		false # height_image.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
+		#false # height_image.lock() # TODOConverter3To4, Image no longer requires locking, `false` helps to not break one line if/else, so it can freely be removed
 		Height = height_image.get_size().y
 		if Height > 1200:
 			print("Image too large.")
@@ -237,9 +237,9 @@ func genWorld(size:Vector2, type, temp, height):
 			print("Image too large.")
 			return
 		if Height > Width:
-			size = Width
+			size.x = Width
 		else:
-			size = Height
+			size.y = Height
 #	find_continents(Width,Height,height)
 #	check type of world, if you have different tilesets for different worlds, include other consts for reference
 	if type == "overworld":
