@@ -54,8 +54,8 @@ var HUMANS = {
 	"ffarlander" : Vector2i(0,0),
 	"nmidlander" : Vector2i(0,1),
 	"mmidlanderknight" : Vector2i(1,1),
-	"mcentral" : Vector2i(2,0),
-	"fcentralknight" : Vector2i(2,1)
+	"mcentral" : Vector2i(0,2),
+	"fcentralknight" : Vector2i(1,2)
 }
 
 var MONSTERS = {
