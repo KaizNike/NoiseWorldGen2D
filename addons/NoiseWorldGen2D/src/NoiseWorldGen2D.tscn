@@ -1,7 +1,10 @@
-[gd_scene load_steps=5 format=4 uid="uid://d2auo7527y6au"]
+[gd_scene load_steps=13 format=4 uid="uid://d2auo7527y6au"]
 
 [ext_resource type="Texture2D" uid="uid://b03gdxikbjxfw" path="res://addons/NoiseWorldGen2D/assets/Terrains.png" id="1"]
 [ext_resource type="Script" uid="uid://dwkeb43hqgebt" path="res://addons/NoiseWorldGen2D/src/NoiseWorldGen2D.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://ds6dayqwbce2u" path="res://addons/NoiseWorldGen2D/assets/LocationsOver.png" id="3_7fw07"]
+[ext_resource type="Texture2D" uid="uid://dkljxwavu56bg" path="res://addons/NoiseWorldGen2D/assets/HumanSheet.png" id="4_px6e7"]
+[ext_resource type="Texture2D" uid="uid://uma8w4n4jw6b" path="res://addons/NoiseWorldGen2D/assets/BasicMonster-Sheet.png" id="5_jb36f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jhf8s"]
 texture = ExtResource("1")
@@ -35,6 +38,49 @@ texture_region_size = Vector2i(8, 8)
 tile_size = Vector2i(8, 8)
 sources/0 = SubResource("TileSetAtlasSource_jhf8s")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_px6e7"]
+texture = ExtResource("3_7fw07")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_jb36f"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_px6e7")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jb36f"]
+texture = ExtResource("4_px6e7")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_51flp"]
+texture = ExtResource("5_jb36f")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_51flp"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_jb36f")
+sources/1 = SubResource("TileSetAtlasSource_51flp")
+
 [node name="NoiseWorldGen2D" type="TileMapLayer"]
 editor_description = "A FastNoiseLite based tile based 2d world generator. Working as a tool script, user beware."
 use_parent_material = true
@@ -48,3 +94,13 @@ height_seed = 3150911806
 forest_seed = 3903904778
 land_seed = 4064851732
 variation_seed = 4216274231
+lock_world = true
+
+[node name="Locations" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AACjAGkAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_jb36f")
+
+[node name="Actors" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_51flp")
+
+[node name="ActorEquipment" type="TileMapLayer" parent="Actors"]

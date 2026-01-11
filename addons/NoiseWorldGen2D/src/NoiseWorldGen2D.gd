@@ -1,4 +1,4 @@
-@tool
+@tool ## BY KaizarNike (2026)
 extends TileMapLayer
 
 var version = "3.0"
@@ -68,6 +68,40 @@ const TILES = {
 	"lushbrushland" : Vector2(1,5),
 	"jungle" : Vector2(2,5),
 	"deepjungle" : Vector2(3,5)
+}
+
+var LOCATIONS = {
+	"cave" : Vector2(0,0),
+	"camp" : Vector2(0,1),
+	"settlement" : Vector2(1,1),
+	"town" : Vector2(2,1),
+	"temple" : Vector2(3,1)
+}
+
+var HUMANS = {
+	"ffarlander" : Vector2(0,0),
+	"nmidlander" : Vector2(0,1),
+	"mmidlanderknight" : Vector2(1,1),
+	"mcentral" : Vector2(2,0),
+	"fcentralknight" : Vector2(2,1)
+}
+
+var MONSTERS = {
+	"blobkin" : Vector2(0,0),
+	"forestslime" : Vector2(1,0),
+	"goblinwarrior" : Vector2(0,1),
+	"goblinmage" : Vector2(1,1),
+	"zombiehuman" : Vector2(2,1),
+	"zombiegoblin" : Vector2(3,1)
+}
+
+var ANIMALS = {
+	"smallfish" : Vector2(2,0),
+	"largefish" : Vector2(3,0),
+	"fox" : Vector2(0,2),
+	"snowrabbit" : Vector2(1,2),
+	"bear" :  Vector2(2,2),
+	"bee" : Vector2(3,2)
 }
 
 @onready var tiles = self.tile_set
