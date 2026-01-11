@@ -1,8 +1,9 @@
-@tool ## BY KaizarNike (2026)
+@tool
+## BY KaizarNike (2026)
 extends TileMapLayer
 
-var version = "3.0"
-
+var version = "4.0"
+# Godot 4.5.1, Actors and Locations
 
 @export var world_size: Vector2 = Vector2(50,50): set = size_change ## X, Y dimensions of world ( setting size greater than 1200 has long processing times )
 @export var time: int = 0 ## Unimplemented, but will change world over time
@@ -43,7 +44,8 @@ var rng = RandomNumberGenerator.new()
 @onready var variation_noise = FastNoiseLite.new()
 @onready var river_noise = FastNoiseLite.new()
 
-@onready var Locations := $Locations
+@onready var Locations = $Locations
+@onready var Actors = $Actors
 
 const TILES = {
 	"dirt" : Vector2(0,0),
@@ -71,8 +73,20 @@ const TILES = {
 	"jungle" : Vector2(2,5),
 	"deepjungle" : Vector2(3,5)
 }
-
+#var OCEANTILES = [4, 5, 6, 7]
+#var RIVERSTARTTILES = [2, 3]
+#var CHILLTILES = [2, 12, 13, 14, 15]
+#var CENTRALTILES = [16, 17]
 const OCEANTILES = [TILES.abyssalwater,TILES.deepwater,TILES.medwater,TILES.shallowwater]
+#var RIVERSTARTTILES = [2, 3]
+var CHILLTILES = [TILES.mountain,TILES.snow, TILES.ice, TILES.tundra, TILES.tundraforest,TILES.tundradeepforest]
+var CENTRALTILES = [TILES.desert,TILES.desertforest]
+#var MIDTILES = [0, 1, 3, 9, 10, 20, 21, 22]
+var MIDTILES = [TILES.grass,
+	TILES.dirt,TILES.brushland,
+	TILES.forest,TILES.lushgrass,
+	TILES.lushgrass, TILES.lushbrushland,
+	TILES.jungle,TILES.deepjungle]
 
 var LOCATIONS = {
 	"cave" : Vector2(0,0),
@@ -112,11 +126,14 @@ var ANIMALS = {
 #@onready var rect = tiles.tile_get_region(0)
 
 func _ready():
+	clear()
 	randomize()
 #	print(get_used_cells())
 	if !get_used_cells() and Engine.is_editor_hint():
 		startup()
-		
+	#elif not Engine.is_editor_hint():
+		#$CreateTime.start()
+		#pre_startup_init()
 
 func testing(test):
 	print("ready.")
@@ -184,7 +201,7 @@ func changing_height(new_height):
 	Height_Change = new_height
 	pre_startup_init()
 
-
+# Would be cool to have a shape dropdown select with rounded, ovalled, ringworld and sky islands
 func is_rounded_change(new_bool):
 	if is_ovalled:
 		is_ovalled = false
@@ -216,12 +233,28 @@ func startup():
 	_forest_noise_init()
 	_land_noise_init()
 	_variation_noise_init()
+	if not Locations or not Actors:
+		if not $CreateTime:
+			return
+		$CreateTime.start()
+		return
+	if not get_tree():
+		if not $CreateTime:
+			return
+		$CreateTime.start()
+		return
+	await get_tree().process_frame
 	print("Genning a world!")
 	genWorld(world_size,world_type,Heat_Change,Height_Change)
 	print("Now for locations!")
-	genLocations(world_type,world_size)
-	print("All Done!")
+	await get_tree().process_frame
+	#Locations.genself(world_type,world_size)
+	
+	#Actors.genself(world_size)
+	
 
+func actorsNOW():
+	Actors.genself(world_size)
 
 func _noise_height_init():
 	noise_height.seed = height_seed
@@ -304,6 +337,7 @@ func genWorld(size:Vector2, type, temp, height):
 					heat -= 1.0 / float(Height) * 2.0
 				if y % 10 == 0:
 					print(float(heat))
+					await get_tree().process_frame
 					pass
 			for x in range(Width):
 				var heat_cell = heat + heatChange + (0.35* variation_noise.get_noise_2d(float(x), float(y))) # + randf_range(-heat_variation, heat_variation) 
@@ -408,7 +442,7 @@ func genWorld(size:Vector2, type, temp, height):
 		pass
 	
 	heat = 0
-	
+	Locations.genself(world_type,world_size)
 		
 func find_continents(X,Y,Height):
 	var a = setup_continents(X,Y)
@@ -482,117 +516,192 @@ func _create_square2d_array(size):
 			
 	return a
 	
-
-func genLocations(type:String, size:Vector2):
-	var node = Locations
-	#var result = _create_square2d_array(size)
-#	print(size)
-	if type == "overworld":
-		print("Genning overworld locations.")
-		var caves = (size * size) / 1000
-		for y in size.y:
-			for x in size.x:
-				if node.get_cell_atlas_coords(Vector2i(x,y)) != Vector2i(-1,-1):
-					continue
-				
-				if self.get_cell_atlas_coords(Vector2i(x,y)) in OCEANTILES:
-					# Sea locations go here.
-					continue
-				else:
-					var Rand = randf_range(-1, 1)
-#						print(Rand)
-					if Rand > 0.995:
-						node.set_cell(Vector2i(x,y),0,LOCATIONS.cave)
-#							print("location added")
-#							caves -= 1
-						tiles_count += 1
-					elif Rand < -0.997:
-						var wealth = rng.randi_range(20, 25000)
-						var anythingPlaced = false
-						if is_rounded and not on_circle(x, y, size):
-							continue
-						if is_ovalled and not is_point_in_rotated_oval(Vector2(x,y),Vector2(size.x/2,size.y/2),Vector2(size.x/2,size.y/2),40.0):
-							continue
-						if is_rounded and on_circle(x+5,y+5,size-Vector2(5,5)):
-							continue
-						elif not (is_rounded or is_ovalled):
-							if x < 5 or x > size.x - 5 or y < 5 or y > size.y - 5:
-								continue
-						while (wealth > 0):
-							if wealth < 200 and !anythingPlaced:
-								node.set_cell(Vector2i(x,y),0,LOCATIONS.camp)
-								wealth = 0
-							elif wealth > 2200:
-								anythingPlaced = true
-								node.set_cell(Vector2i(x,y),0,LOCATIONS.temple)
-								wealth - 800
-#									var Drange = 1
-#									var displace = 1
-#									while (wealth > 0):
-#										var location = Vector2(0,0)
-#										match displace:
-#											1:
-#												location.x = 0
-#												location.y = -1 * Drange
-#											2:
-#												location.x = 0
-#												location.y = 1 * Drange
-#											3:
-#												location.y = 0
-#												location.x = -1 * Drange
-#											4:
-#												location.y = 0
-#												location.x = 1 * Drange
-#											5:
-#												location.x = 1 * Drange
-#												location.y = 1 * Drange
-#											6:
-#												location.x = 1 * Drange
-#												location.y = -1 * Drange
-#											7:
-#												location.x = -1 * Drange
-#												location.y = 1 * Drange
-#											8:
-#												location.x = -1 * Drange
-#												location.y = -1 * Drange
-#												Drange += 1
-#												displace = 0
 #
-#										displace += 1
-#										var Y = y + location.y
-#										var X = x + location.x
-#										if wealth > 2000:
-#											node.set_cell(Vector2i(x,y),0,LOCATIONS.town
-#											wealth -= 500
-#										elif wealth > 200:
-#											node.set_cell(Vector2i(x,y),0,LOCATIONS.settlement
-#											wealth -= 200
-#										else:
-#											wealth = 0
-#Commented out the expansion insanity, we need more florid growht!
-								#if wealth > 500 and result[y-1][x] == null and array[y-1][x] != null:
-									#result[y-1][x] = LOCATIONS.town
-									#wealth -= 500
-								#if wealth > 200 and result[y+1][x] == null and array[y+1][x] != null:
-									#result[y+1][x] = LOCATIONS.settlement
-									#wealth -= 200
-								#if wealth > 200 and result[y][x-1] == null and array[y][x-1] != null:
-									#result[y][x-1] = LOCATIONS.settlement
-									#wealth -= 200
-								#if wealth > 200 and result[y][x+1] == null and array[y][x+1] != null:
-									#result[y][x+1] = LOCATIONS.settlement
-									#wealth -= 200
-								wealth = 0
-								continue
-							elif wealth > 600:
-								anythingPlaced = true
-								node.set_cell(Vector2i(x,y),0,LOCATIONS.town)
-								wealth = 0
-							elif wealth > 200:
-								anythingPlaced = true
-								node.set_cell(Vector2i(x,y),0,LOCATIONS.settlement)
-								wealth = 0
-							wealth = 0
-							pass
-#		generate_rivers(array)
-#		print(result)
+#func genLocations(type:String, size:Vector2):
+	##var result = _create_square2d_array(size)
+##	print(size)
+	#if type == "overworld":
+		#print("Genning overworld locations.")
+		#var caves = (size * size) / 1000
+		#for y in size.y:
+			#for x in size.x:
+				#if Locations.get_cell_atlas_coords(Vector2i(x,y)) != Vector2i(-1,-1):
+					#continue
+				#
+				#if self.get_cell_atlas_coords(Vector2i(x,y)) in OCEANTILES:
+					## Sea locations go here.
+					#continue
+				#else:
+					#var Rand = randf_range(-1, 1)
+##						print(Rand)
+					#if Rand > 0.995:
+						#Locations.set_cell(Vector2i(x,y),0,LOCATIONS.cave)
+##							print("location added")
+##							caves -= 1
+						#tiles_count += 1
+					#elif Rand < -0.997:
+						#var wealth = rng.randi_range(20, 25000)
+						#var anythingPlaced = false
+						#if is_rounded and not on_circle(x, y, size):
+							#continue
+						#if is_ovalled and not is_point_in_rotated_oval(Vector2(x,y),Vector2(size.x/2,size.y/2),Vector2(size.x/2,size.y/2),40.0):
+							#continue
+						#if is_rounded and on_circle(x+5,y+5,size-Vector2(5,5)):
+							#continue
+						#elif not (is_rounded or is_ovalled):
+							#if x < 5 or x > size.x - 5 or y < 5 or y > size.y - 5:
+								#continue
+						#while (wealth > 0):
+							#if wealth < 200 and !anythingPlaced:
+								#Locations.set_cell(Vector2i(x,y),0,LOCATIONS.camp)
+								#wealth = 0
+							#elif wealth > 2200:
+								#anythingPlaced = true
+								#Locations.set_cell(Vector2i(x,y),0,LOCATIONS.temple)
+								#wealth - 800
+##									var Drange = 1
+##									var displace = 1
+##									while (wealth > 0):
+##										var location = Vector2(0,0)
+##										match displace:
+##											1:
+##												location.x = 0
+##												location.y = -1 * Drange
+##											2:
+##												location.x = 0
+##												location.y = 1 * Drange
+##											3:
+##												location.y = 0
+##												location.x = -1 * Drange
+##											4:
+##												location.y = 0
+##												location.x = 1 * Drange
+##											5:
+##												location.x = 1 * Drange
+##												location.y = 1 * Drange
+##											6:
+##												location.x = 1 * Drange
+##												location.y = -1 * Drange
+##											7:
+##												location.x = -1 * Drange
+##												location.y = 1 * Drange
+##											8:
+##												location.x = -1 * Drange
+##												location.y = -1 * Drange
+##												Drange += 1
+##												displace = 0
+##
+##										displace += 1
+##										var Y = y + location.y
+##										var X = x + location.x
+##										if wealth > 2000:
+##											Locations.set_cell(Vector2i(x,y),0,LOCATIONS.town
+##											wealth -= 500
+##										elif wealth > 200:
+##											Locations.set_cell(Vector2i(x,y),0,LOCATIONS.settlement
+##											wealth -= 200
+##										else:
+##											wealth = 0
+##Commented out the expansion insanity, we need more florid growht!
+								##if wealth > 500 and result[y-1][x] == null and array[y-1][x] != null:
+									##result[y-1][x] = LOCATIONS.town
+									##wealth -= 500
+								##if wealth > 200 and result[y+1][x] == null and array[y+1][x] != null:
+									##result[y+1][x] = LOCATIONS.settlement
+									##wealth -= 200
+								##if wealth > 200 and result[y][x-1] == null and array[y][x-1] != null:
+									##result[y][x-1] = LOCATIONS.settlement
+									##wealth -= 200
+								##if wealth > 200 and result[y][x+1] == null and array[y][x+1] != null:
+									##result[y][x+1] = LOCATIONS.settlement
+									##wealth -= 200
+								#wealth = 0
+								#continue
+							#elif wealth > 600:
+								#anythingPlaced = true
+								#Locations.set_cell(Vector2i(x,y),0,LOCATIONS.town)
+								#wealth = 0
+							#elif wealth > 200:
+								#anythingPlaced = true
+								#Locations.set_cell(Vector2i(x,y),0,LOCATIONS.settlement)
+								#wealth = 0
+							#wealth = 0
+							#pass
+##		generate_rivers(array)
+##		print(result)
+
+
+#func generate_characters(size):
+	##var result = _create_square2d_array(size)
+	#for y in size.y:
+		#for x in size.x:
+			#var R = randf()
+##			print(R)
+			#if R > 0.995:
+				#if get_cell_atlas_coords(Vector2(x,y)) == null:
+					#continue
+				#if get_cell_atlas_coords(Vector2(x,y)) in OCEANTILES:
+					#continue
+				##if locArray[y][x] != null:
+					##continue
+###				print("Made it")
+				#if get_cell_atlas_coords(Vector2(x,y)) in CENTRALTILES:
+					#R = randf()
+					#if R > 0.5:
+						#Actors.set_cell(Vector2i(x,y),0,HUMANS.fcentralknight)
+					#else:
+						#Actors.set_cell(Vector2i(x,y),0,HUMANS.mcentral)
+				#elif get_cell_atlas_coords(Vector2(x,y)) in MIDTILES:
+					#R = randf()
+					#if R > 0.5:
+						#Actors.set_cell(Vector2i(x,y),0,HUMANS.mmidlanderknight)
+					#else:
+						#Actors.set_cell(Vector2i(x,y),0,HUMANS.nmidlander)
+				#elif get_cell_atlas_coords(Vector2(x,y)) in CHILLTILES:
+					#Actors.set_cell(Vector2i(x,y),0,HUMANS.ffarlander)
+					#
+			#elif R < 0.017:
+				#if get_cell_atlas_coords(Vector2(x,y)) == Vector2i(TILES.swamp):
+					#R = randf()
+					#if R > 0.5:
+						#Actors.set_cell(Vector2i(x,y),0,MONSTERS.zombiehuman)
+					#else:
+						#Actors.set_cell(Vector2i(x,y),0,MONSTERS.zombiegoblin)
+				#if get_cell_atlas_coords(Vector2(x,y)) in OCEANTILES:
+					#R = randf()
+					#if R > 0.2:
+						#Actors.set_cell(Vector2i(x,y),0,ANIMALS.smallfish)
+					#else:
+						#Actors.set_cell(Vector2i(x,y),0,ANIMALS.largefish)
+	##				continue
+				#elif get_cell_atlas_coords(Vector2(x,y)) in CHILLTILES:
+					#Actors.set_cell(Vector2i(x,y),0,ANIMALS.snowrabbit)
+				#elif get_cell_atlas_coords(Vector2(x,y)) in MIDTILES:
+					#R = randf()
+					#if R > 0.4:
+						#R = randf()
+						#if R > 0.9:
+							#Actors.set_cell(Vector2i(x,y),0,ANIMALS.bear)
+						#elif R > 0.8: 
+							#Actors.set_cell(Vector2i(x,y),0,ANIMALS.fox)
+						#else:
+							#Actors.set_cell(Vector2i(x,y),0,ANIMALS.bee)
+					#else:
+						#R = randf()
+						#if R > 0.4:
+							#R = randf()
+							#if R > 0.49:
+								#Actors.set_cell(Vector2i(x,y),0,MONSTERS.goblinwarrior)
+							#else:
+								#Actors.set_cell(Vector2i(x,y),0,MONSTERS.goblinmage)
+						#else:
+							#R = randf()
+							#if R < 0.2:
+								#Actors.set_cell(Vector2i(x,y),0,MONSTERS.blobkin)
+							#else:
+								#Actors.set_cell(Vector2i(x,y),0,MONSTERS.forestslime)
+
+
+func _on_create_time_timeout() -> void:
+	pre_startup_init()
+	pass # Replace with function body.
