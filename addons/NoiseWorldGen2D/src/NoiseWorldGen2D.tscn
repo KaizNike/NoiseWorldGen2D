@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=4 uid="uid://d2auo7527y6au"]
+[gd_scene load_steps=14 format=4 uid="uid://d2auo7527y6au"]
 
 [ext_resource type="Texture2D" uid="uid://b03gdxikbjxfw" path="res://addons/NoiseWorldGen2D/assets/Terrains.png" id="1"]
 [ext_resource type="Script" uid="uid://dwkeb43hqgebt" path="res://addons/NoiseWorldGen2D/src/NoiseWorldGen2D.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://ds6dayqwbce2u" path="res://addons/NoiseWorldGen2D/assets/LocationsOver.png" id="3_7fw07"]
+[ext_resource type="Script" uid="uid://b0632h163y4uy" path="res://addons/NoiseWorldGen2D/src/locations.gd" id="4_51flp"]
 [ext_resource type="Texture2D" uid="uid://dkljxwavu56bg" path="res://addons/NoiseWorldGen2D/assets/HumanSheet.png" id="4_px6e7"]
 [ext_resource type="Texture2D" uid="uid://uma8w4n4jw6b" path="res://addons/NoiseWorldGen2D/assets/BasicMonster-Sheet.png" id="5_jb36f"]
 
@@ -88,17 +89,16 @@ tile_map_data = PackedByteArray("AAAdAB4AAAADAAAAAAAeAB4AAAADAAAAAAAfAB4AAAADAAA
 tile_set = SubResource("1")
 script = ExtResource("2")
 world_size = Vector2(200, 200)
-time = -2210
 world_seed = 6
 height_seed = 3150911806
 forest_seed = 3903904778
 land_seed = 4064851732
 variation_seed = 4216274231
-lock_world = true
 
 [node name="Locations" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AACjAGkAAAAAAAAAAAA=")
 tile_set = SubResource("TileSet_jb36f")
+script = ExtResource("4_51flp")
 
 [node name="Actors" type="TileMapLayer" parent="."]
 tile_set = SubResource("TileSet_51flp")

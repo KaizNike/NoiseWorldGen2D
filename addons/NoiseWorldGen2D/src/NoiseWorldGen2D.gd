@@ -43,6 +43,8 @@ var rng = RandomNumberGenerator.new()
 @onready var variation_noise = FastNoiseLite.new()
 @onready var river_noise = FastNoiseLite.new()
 
+@onready var Locations := $Locations
+
 const TILES = {
 	"dirt" : Vector2(0,0),
 	"grass" : Vector2(1,0),
@@ -69,6 +71,8 @@ const TILES = {
 	"jungle" : Vector2(2,5),
 	"deepjungle" : Vector2(3,5)
 }
+
+const OCEANTILES = [TILES.abyssalwater,TILES.deepwater,TILES.medwater,TILES.shallowwater]
 
 var LOCATIONS = {
 	"cave" : Vector2(0,0),
@@ -212,7 +216,11 @@ func startup():
 	_forest_noise_init()
 	_land_noise_init()
 	_variation_noise_init()
+	print("Genning a world!")
 	genWorld(world_size,world_type,Heat_Change,Height_Change)
+	print("Now for locations!")
+	genLocations(world_type,world_size)
+	print("All Done!")
 
 
 func _noise_height_init():
@@ -449,3 +457,142 @@ func is_point_in_rotated_oval(point: Vector2, center: Vector2, radius: Vector2, 
 	var rel = point - center
 	var rotated = rel.rotated(-angle)
 	return pow(rotated.x / radius.x, 2) + pow(rotated.y / radius.y, 2) <= 1.0
+
+
+func _create_square2d_array(size):
+	var a = []
+#	var noise_height_image = noise_height.get_image(size, size)
+	for y in range(size):
+		a.append([])
+		a[y].resize(size)
+		
+		for x in range(size):
+			a[y][x] = null
+#			var cell = noise_height.get_noise_2d(float(x), float(y))
+#			print(noise_height_image.get_pixel(x, y))
+#			if cell < -0.1:
+#				a[y][x] = type2
+#			elif cell > -0.1:
+#				a[y][x] = type
+#			if x % 2:
+#				a[y][x] = type2
+#			else:
+#				a[y][x] = type
+#			a[y][x] = type
+			
+	return a
+	
+
+func genLocations(type:String, size:Vector2):
+	var node = Locations
+	#var result = _create_square2d_array(size)
+#	print(size)
+	if type == "overworld":
+		print("Genning overworld locations.")
+		var caves = (size * size) / 1000
+		for y in size.y:
+			for x in size.x:
+				if node.get_cell_atlas_coords(Vector2i(x,y)) != Vector2i(-1,-1):
+					continue
+				
+				if self.get_cell_atlas_coords(Vector2i(x,y)) in OCEANTILES:
+					# Sea locations go here.
+					continue
+				else:
+					var Rand = randf_range(-1, 1)
+#						print(Rand)
+					if Rand > 0.995:
+						node.set_cell(Vector2i(x,y),0,LOCATIONS.cave)
+#							print("location added")
+#							caves -= 1
+						tiles_count += 1
+					elif Rand < -0.997:
+						var wealth = rng.randi_range(20, 25000)
+						var anythingPlaced = false
+						if is_rounded and not on_circle(x, y, size):
+							continue
+						if is_ovalled and not is_point_in_rotated_oval(Vector2(x,y),Vector2(size.x/2,size.y/2),Vector2(size.x/2,size.y/2),40.0):
+							continue
+						if is_rounded and on_circle(x+5,y+5,size-Vector2(5,5)):
+							continue
+						elif not (is_rounded or is_ovalled):
+							if x < 5 or x > size.x - 5 or y < 5 or y > size.y - 5:
+								continue
+						while (wealth > 0):
+							if wealth < 200 and !anythingPlaced:
+								node.set_cell(Vector2i(x,y),0,LOCATIONS.camp)
+								wealth = 0
+							elif wealth > 2200:
+								anythingPlaced = true
+								node.set_cell(Vector2i(x,y),0,LOCATIONS.temple)
+								wealth - 800
+#									var Drange = 1
+#									var displace = 1
+#									while (wealth > 0):
+#										var location = Vector2(0,0)
+#										match displace:
+#											1:
+#												location.x = 0
+#												location.y = -1 * Drange
+#											2:
+#												location.x = 0
+#												location.y = 1 * Drange
+#											3:
+#												location.y = 0
+#												location.x = -1 * Drange
+#											4:
+#												location.y = 0
+#												location.x = 1 * Drange
+#											5:
+#												location.x = 1 * Drange
+#												location.y = 1 * Drange
+#											6:
+#												location.x = 1 * Drange
+#												location.y = -1 * Drange
+#											7:
+#												location.x = -1 * Drange
+#												location.y = 1 * Drange
+#											8:
+#												location.x = -1 * Drange
+#												location.y = -1 * Drange
+#												Drange += 1
+#												displace = 0
+#
+#										displace += 1
+#										var Y = y + location.y
+#										var X = x + location.x
+#										if wealth > 2000:
+#											node.set_cell(Vector2i(x,y),0,LOCATIONS.town
+#											wealth -= 500
+#										elif wealth > 200:
+#											node.set_cell(Vector2i(x,y),0,LOCATIONS.settlement
+#											wealth -= 200
+#										else:
+#											wealth = 0
+#Commented out the expansion insanity, we need more florid growht!
+								#if wealth > 500 and result[y-1][x] == null and array[y-1][x] != null:
+									#result[y-1][x] = LOCATIONS.town
+									#wealth -= 500
+								#if wealth > 200 and result[y+1][x] == null and array[y+1][x] != null:
+									#result[y+1][x] = LOCATIONS.settlement
+									#wealth -= 200
+								#if wealth > 200 and result[y][x-1] == null and array[y][x-1] != null:
+									#result[y][x-1] = LOCATIONS.settlement
+									#wealth -= 200
+								#if wealth > 200 and result[y][x+1] == null and array[y][x+1] != null:
+									#result[y][x+1] = LOCATIONS.settlement
+									#wealth -= 200
+								wealth = 0
+								continue
+							elif wealth > 600:
+								anythingPlaced = true
+								node.set_cell(Vector2i(x,y),0,LOCATIONS.town)
+								wealth = 0
+							elif wealth > 200:
+								anythingPlaced = true
+								node.set_cell(Vector2i(x,y),0,LOCATIONS.settlement)
+								wealth = 0
+							wealth = 0
+							pass
+#		generate_rivers(array)
+#		print(result)
