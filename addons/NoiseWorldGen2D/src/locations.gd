@@ -83,8 +83,8 @@ func genself(type:String, size:Vector2):
 							continue
 						if get_parent().is_ovalled and not get_parent().is_point_in_rotated_oval(Vector2i(x,y),Vector2i(size.x/2,size.y/2),Vector2i(size.x/2,size.y/2),40.0):
 							continue
-						if get_parent().is_rounded and get_parent().on_circle(x+5,y+5,Vector2i(size)-Vector2i(5,5)):
-							continue
+						#if get_parent().is_rounded and get_parent().on_circle(x+5,y+5,Vector2i(size)-Vector2i(5,5)):
+							#continue
 						elif not (get_parent().is_rounded or get_parent().is_ovalled):
 							if x < 5 or x > size.x - 5 or y < 5 or y > size.y - 5:
 								continue

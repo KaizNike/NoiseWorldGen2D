@@ -119,7 +119,7 @@ func genself(size):
 				elif get_parent().get_cell_atlas_coords(Vector2i(x,y)) in CHILLTILES:
 					set_cell(Vector2i(x,y),0,HUMANS.ffarlander)
 					
-			elif R < -0.6:
+			elif R < 0.6:
 				if get_parent().get_cell_atlas_coords(Vector2i(x,y)) == Vector2i(TILES.swamp):
 					R = randf()
 					if R > 0.5:
