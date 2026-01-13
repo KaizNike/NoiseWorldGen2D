@@ -126,6 +126,8 @@ var ANIMALS = {
 #@onready var rect = tiles.tile_get_region(0)
 
 func _ready():
+	if get_used_cells() and not Engine.is_editor_hint():
+		return
 	clear()
 	randomize()
 #	print(get_used_cells())
