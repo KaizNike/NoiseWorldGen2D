@@ -38,11 +38,11 @@ var heightChange = 0
 
 var rng = RandomNumberGenerator.new()
 
-@onready var noise_height = FastNoiseLite.new()
-@onready var forest_noise = FastNoiseLite.new()
-@onready var land_noise = FastNoiseLite.new()
-@onready var variation_noise = FastNoiseLite.new()
-@onready var river_noise = FastNoiseLite.new()
+@export var noise_height = FastNoiseLite.new()
+@export var forest_noise = FastNoiseLite.new()
+@export var land_noise = FastNoiseLite.new()
+@export var variation_noise = FastNoiseLite.new()
+@export var river_noise = FastNoiseLite.new()
 
 @onready var Locations = $Locations
 @onready var Actors = $Actors
@@ -127,6 +127,8 @@ var ANIMALS = {
 
 func _ready():
 	if get_used_cells() and not Engine.is_editor_hint():
+		return
+	if get_used_cells() and Engine.is_editor_hint():
 		return
 	clear()
 	randomize()
