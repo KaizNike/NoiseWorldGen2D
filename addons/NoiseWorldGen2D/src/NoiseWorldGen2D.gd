@@ -130,7 +130,8 @@ func _ready():
 		return
 	if get_used_cells() and Engine.is_editor_hint():
 		return
-	clear()
+	if not get_used_cells():
+		clear()
 	randomize()
 #	print(get_used_cells())
 	if !get_used_cells() and Engine.is_editor_hint():
@@ -707,5 +708,8 @@ func _create_square2d_array(size):
 
 
 func _on_create_time_timeout() -> void:
-	pre_startup_init()
+	if get_used_cells():
+		return
+	#pre_startup_init()
+	startup()
 	pass # Replace with function body.
