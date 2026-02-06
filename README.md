@@ -1,5 +1,5 @@
-# NoiseWorldGen2D - Godot Tilemap Tool (Godot Version 4.5)
-![Banner Worldgen](.//worldgenbanner3.png)
+# NoiseWorldGen2D - Godot Tilemap Tool (Godot Version 4.6)
+![Banner Worldgen](.//worldgenbanner4.png)
 
 ## Made for:
 #### [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x)
@@ -15,11 +15,13 @@
 Kudos to whoever made it!
 
 ## Installation:
-Copy the addons folder to your project and instance the NoiseWorldGen2D Node. Made for 2D. Change the exported variables to customize.
+2D: Copy the addons folder to your project and instance the NoiseWorldGen2D Node. Made for 2D. Change the exported variables to customize.
+
+3D: Working on!
 
 ## Personalizing:
 ![Terrains](.//addons/NoiseWorldGen2D/assets/Terrains.png)
 Included are 24 tiles that make up the world. For simplicity, you may replace "Terrains.png" with different tiles. If you change the size of the tiles, or add new tiles you will need to redefine the atlas. Adding new world types can be done by editing the "NoiseWorldGen2D.gd"'s ```genWorld()``` function. The section - ```elif type == "hellplanet":``` is where custom planet types are meant to go. Reference ```if type == "overworld":``` for example on how to build.
 
 ## Updates (9/16/2025):
-Now for Godot 4.5! Got some documentation down in editor.
+Now for Godot 4.6! Added a new world type and solar systems in 3D.
