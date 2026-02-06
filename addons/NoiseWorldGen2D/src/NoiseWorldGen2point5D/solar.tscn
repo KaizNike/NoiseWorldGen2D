@@ -548,6 +548,7 @@ autoplay = &"spin"
 
 [node name="SolarPlayer" type="AnimationPlayer" parent="." unique_id=1861098501]
 libraries/ = SubResource("AnimationLibrary_wris2")
+autoplay = &"start"
 script = ExtResource("5_wris2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=254916915]
@@ -562,15 +563,18 @@ mesh = SubResource("TorusMesh_mybo8")
 transform = Transform3D(1.0000002, 0, 0, 0, 0.9999999, 0, 0, 0, 1, -8430.209, 6216.6855, -7018.118)
 
 [node name="Camera3D2" type="Camera3D" parent="GotOPoint4" unique_id=1142406472]
-transform = Transform3D(0.74952483, -0.2878771, 0.5961035, -0.6464784, -0.5120289, 0.56559044, 0.14240156, -0.80929244, -0.56988454, 91650.47, 56690.547, -87963.664)
+transform = Transform3D(0.74952483, -0.28787708, 0.5961035, -0.6464784, -0.5120288, 0.56559044, 0.14240153, -0.8092923, -0.56988454, 91650.47, 56690.547, -87963.664)
 rotation_edit_mode = 1
-current = true
+visible = false
 far = 400000.0
 
 [node name="CamPlayer" type="AnimationPlayer" parent="GotOPoint4/Camera3D2" unique_id=1710092060]
-root_node = NodePath("../../Camera3D2")
 libraries/ = SubResource("AnimationLibrary_hbh5m")
 script = ExtResource("4_mybo8")
 
+[node name="Camera3D" parent="GotOPoint4" index="4" unique_id=31680032]
+current = true
+
 [editable path="GotOPoint"]
 [editable path="GotOPoint2"]
+[editable path="GotOPoint4"]

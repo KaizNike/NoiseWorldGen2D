@@ -1,4 +1,4 @@
-#@tool
+@tool
 extends TileMapLayer
 
 const TILES = {

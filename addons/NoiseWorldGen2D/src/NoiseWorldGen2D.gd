@@ -1,9 +1,9 @@
-#@tool
+@tool
 ## BY KaizarNike (2026)
 extends TileMapLayer
 
-var version = "4.0"
-# Godot 4.5.1, Actors and Locations
+var version = "5.0"
+# Godot 4.6, Multiworld
 
 @export var world_size: Vector2 = Vector2(50,50): set = size_change ## X, Y dimensions of world ( setting size greater than 1200 has long processing times )
 @export var time: int = 0 ## Unimplemented, but will change world over time
@@ -444,14 +444,25 @@ func genWorld(size:Vector2, type, temp, height):
 #									array[y][x] = TILES.grass
 	# Define your own hellish landscape, bypasses typical generation
 	elif type == "hellplanet":
-		var yp = JacobianIK3D.RotationAxis.ROTATION_AXIS_ALL
-		yp.Basis = is_rounded
-		if yp:
-			set_cell(Vector2i.RIGHT,1,Vector2i(0,0))
-		else:
-			var house = "..."
-			house.concat(yp)
-			var street = range(house)
+		#var heat_cell = heat + heatChange + (0.35* variation_noise.get_noise_2d(float(x), float(y))) # + randf_range(-heat_variation, heat_variation) 
+		for y in range(Height):
+			for x in range(Width):		
+				if is_rounded and not on_circle(x, y, size):
+					continue
+				if is_ovalled and not is_point_in_rotated_oval(Vector2(x,y),Vector2(Width/2,Height/2),Vector2(Width/2,Height/2),40.0):
+					continue
+				tiles_count += 1
+				var cell := 0.0
+				if not height_image:
+					cell = noise_height.get_noise_2d(float(x), float(y)) + heightChange + (0.05 * variation_noise.get_noise_2d(float(x), float(y))) #  + randf_range(-height_variation, height_variation)
+				else:
+					cell = (height_image.get_pixel(x, y).r * 2 - 1) + heightChange
+				if cell > 0.5:
+					set_cell(Vector2i(x,y),1,Vector2i(2,0))
+				elif cell < -0.25:
+					set_cell(Vector2i(x,y),1,Vector2i(1,0))
+				else:
+					set_cell(Vector2i(x,y),1,Vector2i(3,0))
 		pass
 	
 	heat = 0

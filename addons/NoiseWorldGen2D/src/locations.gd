@@ -1,4 +1,4 @@
-#@tool
+@tool
 extends TileMapLayer
 
 var rng = RandomNumberGenerator.new()
