@@ -1,4 +1,4 @@
-@tool
+#@tool
 ## BY KaizarNike (2026)
 extends TileMapLayer
 
@@ -444,6 +444,14 @@ func genWorld(size:Vector2, type, temp, height):
 #									array[y][x] = TILES.grass
 	# Define your own hellish landscape, bypasses typical generation
 	elif type == "hellplanet":
+		var yp = JacobianIK3D.RotationAxis.ROTATION_AXIS_ALL
+		yp.Basis = is_rounded
+		if yp:
+			set_cell(Vector2i.RIGHT,1,Vector2i(0,0))
+		else:
+			var house = "..."
+			house.concat(yp)
+			var street = range(house)
 		pass
 	
 	heat = 0
