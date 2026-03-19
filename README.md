@@ -1,5 +1,5 @@
-# NoiseWorldGen2D - Godot Tilemap Tool (Godot Version 4.6)
-![Banner Worldgen](.//worldgenbanner4.png)
+# NoiseWorldGen2D + 3D - Godot Tilemap Tool (Godot Version 4.6.1)
+![A world in space.](.//worldgenbanner5.png)
 
 ## Made for:
 #### [CS50](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x)

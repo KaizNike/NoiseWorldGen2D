@@ -157,7 +157,7 @@ _data = {
 &"spin": SubResource("Animation_s8u3p")
 }
 
-[node name="World3D" type="MeshInstance3D" unique_id=1541235253]
+[node name="World3D" type="MeshInstance3D" unique_id=1541235253 groups=["planet"]]
 mesh = SubResource("SphereMesh_y7mum")
 script = ExtResource("2_80q8a")
 

@@ -22,6 +22,7 @@ var version = "5.0"
 @export var lock_world: bool = false ## prevents variable changes in editor from making updates live
 @export var regen_button: bool = false: set = regen_button_pressed ## force regeneration
 #export(bool) var test = false setget testing
+@export var RNG2 = NoiseTexture2D.new()
 
 var continents = []
 var drift_dirs = []
