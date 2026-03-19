@@ -2,12 +2,13 @@
 
 importer="image"
 type="Image"
-path="res://.import/heightMapEarth.png-cae7949d752b82b992af109a0d9b0ecf.image"
+uid="uid://cw7ytp3hdkycb"
+path="res://.godot/imported/heightMapEarth.png-cae7949d752b82b992af109a0d9b0ecf.image"
 
 [deps]
 
 source_file="res://addons/NoiseWorldGen2D/assets/heightMapEarth.png"
-dest_files=[ "res://.import/heightMapEarth.png-cae7949d752b82b992af109a0d9b0ecf.image" ]
+dest_files=["res://.godot/imported/heightMapEarth.png-cae7949d752b82b992af109a0d9b0ecf.image"]
 
 [params]
 

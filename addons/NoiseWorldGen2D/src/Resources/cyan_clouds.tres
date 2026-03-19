@@ -1,0 +1,21 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://rmsunx1qi0nk"]
+
+[ext_resource type="Shader" uid="uid://beil02ilr2hlo" path="res://addons/NoiseWorldGen2D/src/NoiseWorldGen3D/clouds.gdshader" id="1_40f4t"]
+
+[sub_resource type="Gradient" id="Gradient_40f4t"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_1uehd"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_70f0g"]
+resource_local_to_scene = true
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_1uehd")
+color_ramp = SubResource("Gradient_40f4t")
+seamless = true
+
+[resource]
+render_priority = 1
+shader = ExtResource("1_40f4t")
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_70f0g")
+shader_parameter/speed = 0.02
+shader_parameter/cloud_color = Color(0.20859098, 0.9947316, 1, 1)

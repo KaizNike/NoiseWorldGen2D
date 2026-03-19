@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://dlg43ri4gqojn"]
+
+[ext_resource type="Script" uid="uid://cv2py5u08uvft" path="res://addons/NoiseWorldGen2D/src/game_worldgen.gd" id="1_4tbfh"]
+[ext_resource type="PackedScene" uid="uid://8qmgjrurb02u" path="res://addons/NoiseWorldGen2D/src/NoiseWorldGen2point5D/solar.tscn" id="1_tichf"]
+[ext_resource type="Script" uid="uid://bxy41ryotunmt" path="res://addons/NoiseWorldGen2D/src/camera_3d_game.gd" id="2_rdgqv"]
+[ext_resource type="Shader" uid="uid://bi3l7ge4qs7u7" path="res://addons/NoiseWorldGen2D/src/zoom_mag.gdshader" id="3_32st2"]
+[ext_resource type="Script" uid="uid://56c6altt8ig5" path="res://addons/NoiseWorldGen2D/src/magnifier_root.gd" id="3_xit7a"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_7p6iq"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_513hl"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_7p6iq")
+albedo_texture_force_srgb = true
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_wusqh"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_emq7s"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_wusqh")
+albedo_texture_force_srgb = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xit7a"]
+shader = ExtResource("3_32st2")
+shader_parameter/zoom_factor = 25.0
+shader_parameter/planet_screen_pos = Vector2(0, 0)
+
+[node name="Game" type="Node" unique_id=1618267012]
+script = ExtResource("1_4tbfh")
+
+[node name="Solar" parent="." unique_id=1943362448 instance=ExtResource("1_tichf")]
+
+[node name="CSGSphere3D" parent="Solar" index="0" unique_id=1703135074]
+transform = Transform3D(1.0000001, -2.9802322e-08, 2.9802322e-08, 0, 0.99999994, -1.8626451e-08, -1.4901161e-08, 7.450581e-09, 1, -0.3093564, -0.52195257, 0.79489917)
+
+[node name="GotOPoint" parent="Solar" index="3" unique_id=300976513]
+material = SubResource("StandardMaterial3D_513hl")
+
+[node name="GotOPoint2" parent="Solar" index="4" unique_id=293161152]
+material = SubResource("StandardMaterial3D_emq7s")
+
+[node name="Camera3D2" parent="Solar/GotOPoint4" parent_id_path=PackedInt32Array(1943362448, 830717742) index="4" unique_id=1142406472]
+transform = Transform3D(0.7495249, -0.2878771, 0.5961035, -0.6464783, -0.5120287, 0.56559044, 0.14240153, -0.80929226, -0.5698844, 91650.47, 56690.547, -87963.664)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1040294892]
+transform = Transform3D(-0.9994215, 0, 0.0340099, 0, 1, 0, -0.0340099, 0, -0.9994215, 0, 0, -5764.5767)
+current = true
+far = 40000.0
+script = ExtResource("2_rdgqv")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1386139965]
+
+[node name="MagnifierRoot" type="Control" parent="CanvasLayer" unique_id=1213500673]
+editor_description = "Lens shader and Magnification by Google Gemini."
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_xit7a")
+
+[node name="Lens" type="ColorRect" parent="CanvasLayer/MagnifierRoot" unique_id=1874454970]
+material = SubResource("ShaderMaterial_xit7a")
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[editable path="Solar"]
+[editable path="Solar/GotOPoint"]
+[editable path="Solar/GotOPoint2"]
+[editable path="Solar/GotOPoint4"]

@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://clmv2bet65sis"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_7qtn7"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_cq57x"]
+
+[node name="RigidBody3D" type="RigidBody3D" unique_id=706039603 groups=["gravity_objects"]]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1907158769]
+mesh = SubResource("CylinderMesh_7qtn7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=685712774]
+shape = SubResource("CylinderShape3D_cq57x")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2011014065]
+current = true

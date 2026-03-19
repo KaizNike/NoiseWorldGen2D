@@ -2,12 +2,13 @@
 
 importer="image"
 type="Image"
-path="res://.import/GfZCz.jpeg-3f3eb7606fca5890a1e6c46b86887b2e.image"
+uid="uid://dyyavbpddd6an"
+path="res://.godot/imported/GfZCz.jpeg-3f3eb7606fca5890a1e6c46b86887b2e.image"
 
 [deps]
 
 source_file="res://addons/NoiseWorldGen2D/assets/GfZCz.jpeg"
-dest_files=[ "res://.import/GfZCz.jpeg-3f3eb7606fca5890a1e6c46b86887b2e.image" ]
+dest_files=["res://.godot/imported/GfZCz.jpeg-3f3eb7606fca5890a1e6c46b86887b2e.image"]
 
 [params]
 
