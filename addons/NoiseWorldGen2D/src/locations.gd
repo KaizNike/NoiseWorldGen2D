@@ -96,6 +96,7 @@ func genself(type:String, size:Vector2):
 								anythingPlaced = true
 								self.set_cell(Vector2i(x,y),0,LOCATIONS.temple)
 								wealth - 800
+								get_parent().get_node("Cult").exude_pressure(Vector2i(x,y))
 #									var Drange = 1
 #									var displace = 1
 #									while (wealth > 0):
