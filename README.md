@@ -23,5 +23,5 @@ Kudos to whoever made it!
 ![Terrains](.//addons/NoiseWorldGen2D/assets/Terrains.png)
 Included are 24 tiles that make up the world. For simplicity, you may replace "Terrains.png" with different tiles. If you change the size of the tiles, or add new tiles you will need to redefine the atlas. Adding new world types can be done by editing the "NoiseWorldGen2D.gd"'s ```genWorld()``` function. The section - ```elif type == "hellplanet":``` is where custom planet types are meant to go. Reference ```if type == "overworld":``` for example on how to build.
 
-## Updates (3/19/2026):
-Now for Godot 4.6.1! Added a new world type and solar systems in 3D.
+## Updates (3/26/2026):
+Now with culture! It spreads via temples, like in real life. Smell the human diaspora.
